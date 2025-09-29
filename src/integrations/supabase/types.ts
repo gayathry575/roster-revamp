@@ -14,7 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      faculty: {
+        Row: {
+          created_at: string | null
+          department: string
+          faculty_id: string
+          faculty_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          department: string
+          faculty_id: string
+          faculty_name: string
+        }
+        Update: {
+          created_at?: string | null
+          department?: string
+          faculty_id?: string
+          faculty_name?: string
+        }
+        Relationships: []
+      }
+      timetable_slots: {
+        Row: {
+          course_code: string | null
+          created_at: string | null
+          day: string
+          faculty_id: string
+          id: string
+          slot_number: number
+          subject: string
+          timetable_id: string
+        }
+        Insert: {
+          course_code?: string | null
+          created_at?: string | null
+          day: string
+          faculty_id: string
+          id?: string
+          slot_number: number
+          subject: string
+          timetable_id: string
+        }
+        Update: {
+          course_code?: string | null
+          created_at?: string | null
+          day?: string
+          faculty_id?: string
+          id?: string
+          slot_number?: number
+          subject?: string
+          timetable_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timetable_slots_faculty_id_fkey"
+            columns: ["faculty_id"]
+            isOneToOne: false
+            referencedRelation: "faculty"
+            referencedColumns: ["faculty_id"]
+          },
+          {
+            foreignKeyName: "timetable_slots_timetable_id_fkey"
+            columns: ["timetable_id"]
+            isOneToOne: false
+            referencedRelation: "timetables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      timetables: {
+        Row: {
+          block: string
+          classroom: string
+          created_at: string | null
+          department: string
+          id: string
+          semester: string
+          user_id: string | null
+        }
+        Insert: {
+          block: string
+          classroom: string
+          created_at?: string | null
+          department: string
+          id?: string
+          semester: string
+          user_id?: string | null
+        }
+        Update: {
+          block?: string
+          classroom?: string
+          created_at?: string | null
+          department?: string
+          id?: string
+          semester?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

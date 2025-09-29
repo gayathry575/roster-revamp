@@ -16,9 +16,10 @@ const SEMESTERS = [
 
 interface TimetableGeneratorProps {
   onGenerate: (inputs: TimetableInputs) => void;
+  onViewSaved: () => void;
 }
 
-export const TimetableGenerator: React.FC<TimetableGeneratorProps> = ({ onGenerate }) => {
+export const TimetableGenerator: React.FC<TimetableGeneratorProps> = ({ onGenerate, onViewSaved }) => {
   const [inputs, setInputs] = useState<TimetableInputs>({
     department: '',
     semester: '',
@@ -220,9 +221,12 @@ export const TimetableGenerator: React.FC<TimetableGeneratorProps> = ({ onGenera
 
         <ConflictWarning conflicts={conflicts} />
 
-        <div className="text-center mt-6">
+        <div className="text-center space-x-4 mt-6">
           <Button variant="generate" size="lg" onClick={handleGenerate}>
-            Generate Timetable
+            🚀 Generate Timetable
+          </Button>
+          <Button variant="back" onClick={onViewSaved}>
+            📋 View Saved Timetables
           </Button>
         </div>
       </div>

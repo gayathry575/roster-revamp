@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { TimetableInputs, TimetableData, Course, FacultyConflict } from '@/types/timetable';
+import { timetableService } from '@/services/timetableService';
 
 interface TimetableDisplayProps {
   inputs: TimetableInputs;
@@ -29,23 +30,13 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
     return existing ? JSON.parse(existing) : [];
   };
 
-  const checkGlobalFacultyConflicts = (day: string, slot: number, facultyId: string): FacultyConflict[] => {
-    const existingTimetables = loadExistingTimetables();
-    const conflicts: FacultyConflict[] = [];
-
-    existingTimetables.forEach((timetableData, index) => {
-      if (timetableData.timetable?.[day]?.[slot]?.includes(`(${facultyId})`)) {
-        conflicts.push({
-          timetable: `Timetable ${index + 1}`,
-          department: timetableData.department,
-          semester: timetableData.semester,
-          day,
-          slot: slot + 1
-        });
-      }
-    });
-
-    return conflicts;
+  const checkGlobalFacultyConflicts = async (day: string, slot: number, facultyId: string): Promise<FacultyConflict[]> => {
+    try {
+      return await timetableService.checkFacultyConflicts(day, slot, facultyId);
+    } catch (error) {
+      console.error('Error checking faculty conflicts:', error);
+      return [];
+    }
   };
 
   const getRandomDay = (exclude: string[] = []): string => {
@@ -53,7 +44,7 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
     return available[Math.floor(Math.random() * available.length)];
   };
 
-  const placeSlots = (day: string, course: Course, count: number, timetableData: { [day: string]: string[] }): boolean => {
+  const placeSlots = async (day: string, course: Course, count: number, timetableData: { [day: string]: string[] }): Promise<boolean> => {
     const slots = timetableData[day];
     const { facultyId } = course;
 
@@ -69,7 +60,7 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
         }
 
         // Check global conflicts for each potential slot
-        const globalConflicts = checkGlobalFacultyConflicts(day, i + j, facultyId);
+        const globalConflicts = await checkGlobalFacultyConflicts(day, i + j, facultyId);
         if (globalConflicts.length > 0) {
           fits = false;
           break;
@@ -86,7 +77,7 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
     return false;
   };
 
-  const generateTimetable = () => {
+  const generateTimetable = async () => {
     // Initialize empty timetable
     const newTimetable: { [day: string]: string[] } = {};
     DAYS.forEach(day => {
@@ -96,7 +87,7 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
     const conflictMessages: string[] = [];
     let hasConflicts = false;
 
-    inputs.courses.forEach(course => {
+    for (const course of inputs.courses) {
       let remaining = course.slots;
       const consecCount = course.consecutive === 'yes' ? course.consecutiveSlots : 1;
 
@@ -104,7 +95,7 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
         const day = getRandomDay();
         const toPlace = Math.min(consecCount, remaining);
 
-        if (placeSlots(day, course, toPlace, newTimetable)) {
+        if (await placeSlots(day, course, toPlace, newTimetable)) {
           remaining -= toPlace;
         } else {
           // Try other days
@@ -112,7 +103,7 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
           let placed = false;
 
           for (const otherDay of otherDays) {
-            if (placeSlots(otherDay, course, toPlace, newTimetable)) {
+            if (await placeSlots(otherDay, course, toPlace, newTimetable)) {
               remaining -= toPlace;
               placed = true;
               break;
@@ -126,7 +117,7 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
           }
         }
       }
-    });
+    }
 
     setTimetable(newTimetable);
     setConflicts(conflictMessages);
@@ -140,22 +131,22 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
     }
   };
 
-  const saveTimetable = () => {
-    const existingTimetables = loadExistingTimetables();
-    
-    const timetableData: TimetableData = {
-      ...inputs,
-      timetable,
-      generatedAt: new Date().toISOString()
-    };
-
-    existingTimetables.push(timetableData);
-    localStorage.setItem('savedTimetables', JSON.stringify(existingTimetables));
-
-    toast({
-      title: "Success",
-      description: "Timetable saved successfully!"
-    });
+  const saveTimetable = async () => {
+    try {
+      const timetableId = await timetableService.saveTimetable(inputs, timetable);
+      
+      toast({
+        title: "Success",
+        description: "Timetable saved successfully to database!"
+      });
+    } catch (error) {
+      console.error('Error saving timetable:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save timetable. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const downloadPDF = () => {
