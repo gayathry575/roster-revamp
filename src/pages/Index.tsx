@@ -1,13 +1,30 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import React, { useState } from 'react';
+import { TimetableGenerator } from '@/components/TimetableGenerator';
+import { TimetableDisplay } from '@/components/TimetableDisplay';
+import { TimetableInputs } from '@/types/timetable';
 
 const Index = () => {
+  const [currentView, setCurrentView] = useState<'generator' | 'display'>('generator');
+  const [timetableInputs, setTimetableInputs] = useState<TimetableInputs | null>(null);
+
+  const handleGenerate = (inputs: TimetableInputs) => {
+    setTimetableInputs(inputs);
+    setCurrentView('display');
+  };
+
+  const handleBack = () => {
+    setCurrentView('generator');
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      {currentView === 'generator' && (
+        <TimetableGenerator onGenerate={handleGenerate} />
+      )}
+      {currentView === 'display' && timetableInputs && (
+        <TimetableDisplay inputs={timetableInputs} onBack={handleBack} />
+      )}
+    </>
   );
 };
 

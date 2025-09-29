@@ -47,6 +47,16 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Amrita specific colors
+        amrita: {
+          primary: "hsl(var(--amrita-primary))",
+          secondary: "hsl(var(--amrita-secondary))",
+          light: "hsl(var(--amrita-light))",
+          dark: "hsl(var(--amrita-dark))",
+          accent: "hsl(var(--amrita-accent))",
+          highlight: "hsl(var(--amrita-highlight))",
+          border: "hsl(var(--amrita-border))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

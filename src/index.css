@@ -2,39 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Amrita Timetable Design System - All colors MUST be HSL */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Amrita Color Palette */
+    --amrita-primary: 335 68% 31%; /* #8e1a4a */
+    --amrita-secondary: 46 100% 99%; /* #fffefa */
+    --amrita-light: 324 20% 97%; /* #f8f4f7 */
+    --amrita-dark: 240 25% 3%; /* #080608 */
+    --amrita-accent: 315 38% 91%; /* #ece1e5 */
+    --amrita-highlight: 42 67% 92%; /* #f9e9d0 */
+    --amrita-border: 276 10% 75%; /* #d0c9d6 */
+    --amrita-gradient: linear-gradient(135deg, hsl(var(--amrita-light)) 0%, hsl(324 15% 89%) 100%);
+    
+    /* Semantic tokens based on Amrita colors */
+    --background: var(--amrita-secondary);
+    --foreground: var(--amrita-dark);
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: var(--amrita-dark);
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: var(--amrita-dark);
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: var(--amrita-primary);
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: var(--amrita-accent);
+    --secondary-foreground: var(--amrita-dark);
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: var(--amrita-light);
+    --muted-foreground: var(--amrita-dark);
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: var(--amrita-highlight);
+    --accent-foreground: var(--amrita-dark);
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: var(--amrita-border);
+    --input: var(--amrita-border);
+    --ring: var(--amrita-primary);
 
     --radius: 0.5rem;
 
@@ -101,5 +110,28 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .amrita-gradient-bg {
+    background: var(--amrita-gradient);
+  }
+  
+  .amrita-container {
+    @apply bg-white rounded-2xl shadow-2xl border;
+    border-color: hsl(var(--amrita-border) / 0.1);
+    max-height: 95vh;
+    overflow-y: auto;
+  }
+  
+  .amrita-logo {
+    @apply w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg;
+    background: hsl(var(--amrita-primary));
+  }
+  
+  .amrita-form-section {
+    @apply rounded-xl p-4 mb-5;
+    background: hsl(var(--amrita-light));
+    border-left: 4px solid hsl(var(--amrita-accent));
   }
 }
