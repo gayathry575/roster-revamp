@@ -46,6 +46,12 @@ export const timetableService = {
     timetableData: { [day: string]: string[] }
   ): Promise<string> {
     try {
+      // Validate no conflicts exist before saving
+      const validation = await this.validateTimetableConflicts(timetableData);
+      if (!validation.valid) {
+        throw new Error(`Cannot save timetable due to faculty conflicts:\n${validation.conflicts.join('\n')}`);
+      }
+
       // First save faculty data
       await this.saveFaculty(inputs.courses);
 
@@ -131,16 +137,45 @@ export const timetableService = {
 
     if (error) {
       console.error('Error checking faculty conflicts:', error);
-      return [];
+      throw new Error('Failed to check faculty conflicts');
     }
 
-    return conflictingSlots.map((slot: any, index: number) => ({
+    return conflictingSlots.map((slot: any) => ({
       timetable: `${slot.timetables.department} - ${slot.timetables.semester} (${slot.timetables.block})`,
       department: slot.timetables.department,
       semester: slot.timetables.semester,
       day,
       slot: slotNumber + 1
     }));
+  },
+
+  // Validate entire timetable for conflicts before saving
+  async validateTimetableConflicts(timetableData: { [day: string]: string[] }): Promise<{ valid: boolean; conflicts: string[] }> {
+    const conflicts: string[] = [];
+
+    for (const [day, daySlots] of Object.entries(timetableData)) {
+      for (let slotIndex = 0; slotIndex < daySlots.length; slotIndex++) {
+        const slotContent = daySlots[slotIndex];
+        if (slotContent && slotContent.trim() !== '') {
+          const match = slotContent.match(/^(.+?)<br\/><span[^>]*>\([^)]+\)<br\/>(.+?)<\/span>$/);
+          if (match) {
+            const facultyId = match[2];
+            const existingConflicts = await this.checkFacultyConflicts(day, slotIndex, facultyId);
+            
+            if (existingConflicts.length > 0) {
+              conflicts.push(
+                `${facultyId} is already teaching on ${day} slot ${slotIndex + 1} in ${existingConflicts[0].timetable}`
+              );
+            }
+          }
+        }
+      }
+    }
+
+    return {
+      valid: conflicts.length === 0,
+      conflicts
+    };
   },
 
   // Get all saved timetables

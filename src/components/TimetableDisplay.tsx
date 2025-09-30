@@ -35,6 +35,11 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
       return await timetableService.checkFacultyConflicts(day, slot, facultyId);
     } catch (error) {
       console.error('Error checking faculty conflicts:', error);
+      toast({
+        title: "Conflict Check Failed",
+        description: "Unable to verify faculty availability. Please try again.",
+        variant: "destructive"
+      });
       return [];
     }
   };
