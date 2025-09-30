@@ -35,6 +35,27 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string
+          username: string
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          role?: string
+          username: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string
+          username?: string
+        }
+        Relationships: []
+      }
       timetable_slots: {
         Row: {
           course_code: string | null

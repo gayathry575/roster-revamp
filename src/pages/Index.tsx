@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TimetableGenerator } from '@/components/TimetableGenerator';
 import { TimetableDisplay } from '@/components/TimetableDisplay';
 import { SavedTimetables } from '@/components/SavedTimetables';
+import Header from '@/components/Header';
 import { TimetableInputs } from '@/types/timetable';
 import { timetableService } from '@/services/timetableService';
 
@@ -82,7 +83,12 @@ const Index = () => {
     }
   };
 
-  return <div className="min-h-screen">{renderView()}</div>;
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <Header />
+      {renderView()}
+    </div>
+  );
 };
 
 export default Index;

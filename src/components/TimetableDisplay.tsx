@@ -9,12 +9,10 @@ interface TimetableDisplayProps {
   onBack: () => void;
 }
 
+import { SLOT_TIMINGS, getTotalSlots, BREAK_TIME } from '@/utils/slotTimings';
+
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const SLOTS_PER_DAY = 10;
-const SLOT_TIMES = [
-  "8:00–8:50", "8:50–9:40", "9:40–10:30", "10:45–11:35", "11:35–12:25",
-  "12:25–1:15", "1:15–2:05", "2:05–2:55", "2:55–3:45", "3:45–4:35"
-];
+const SLOTS_PER_DAY = getTotalSlots();
 
 export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBack }) => {
   const [timetable, setTimetable] = useState<{ [day: string]: string[] }>({});
@@ -202,22 +200,22 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
               <th rowSpan={2} className="bg-amrita-primary text-white p-3 border border-amrita-border font-semibold">
                 Day / Time
               </th>
-              {SLOT_TIMES.slice(0, 3).map((time, index) => (
+              {SLOT_TIMINGS.slice(0, 3).map((time, index) => (
                 <th key={index} className="bg-amrita-primary text-white p-3 border border-amrita-border font-semibold">
                   Slot {index + 1}
                 </th>
               ))}
               <th rowSpan={2} className="bg-white text-amrita-dark p-3 border border-amrita-border font-bold">
-                Break<br />10:30–10:45
+                Break<br />{BREAK_TIME}
               </th>
-              {SLOT_TIMES.slice(3).map((time, index) => (
+              {SLOT_TIMINGS.slice(3).map((time, index) => (
                 <th key={index + 4} className="bg-amrita-primary text-white p-3 border border-amrita-border font-semibold">
                   Slot {index + 4}
                 </th>
               ))}
             </tr>
             <tr>
-              {SLOT_TIMES.map((time, index) => index !== 3 && (
+              {SLOT_TIMINGS.map((time, index) => index !== 3 && (
                 <th key={index} className="bg-amrita-primary text-white p-2 border border-amrita-border text-sm">
                   {time}
                 </th>
