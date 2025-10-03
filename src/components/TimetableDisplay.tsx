@@ -193,27 +193,6 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
         </div>
       )}
 
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-amrita-border mb-5">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="bg-white text-left p-3 border border-gray-300 text-black font-semibold">Course Code</th>
-              <th className="bg-white text-left p-3 border border-gray-300 text-black font-semibold">Course</th>
-              <th className="bg-white text-left p-3 border border-gray-300 text-black font-semibold">Handling Faculty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {inputs.courses.map((course, index) => (
-              <tr key={index}>
-                <td className="bg-white p-3 border border-gray-300 text-black">{course.courseCode}</td>
-                <td className="bg-white p-3 border border-gray-300 text-black">{course.subject}</td>
-                <td className="bg-white p-3 border border-gray-300 text-black">{course.faculty}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
       <div className="overflow-x-auto bg-white rounded-lg shadow-lg border border-amrita-border">
         <table className="w-full border-collapse">
           <thead>
@@ -271,6 +250,27 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
                     />
                   );
                 })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="bg-white p-4 rounded-lg shadow-sm border border-amrita-border mt-5">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr>
+              <th className="bg-white text-left p-3 border border-gray-300 text-black font-semibold">Course Code</th>
+              <th className="bg-white text-left p-3 border border-gray-300 text-black font-semibold">Course</th>
+              <th className="bg-white text-left p-3 border border-gray-300 text-black font-semibold">Handling Faculty</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inputs.courses.map((course, index) => (
+              <tr key={index}>
+                <td className="bg-white p-3 border border-gray-300 text-black">{course.courseCode}</td>
+                <td className="bg-white p-3 border border-gray-300 text-black">{course.subject}</td>
+                <td className="bg-white p-3 border border-gray-300 text-black">{course.faculty}</td>
               </tr>
             ))}
           </tbody>
