@@ -257,13 +257,13 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
       </div>
 
       <div className="text-center mt-8 space-x-4">
-        <Button variant="pdf" onClick={downloadPDF}>
+        <Button variant="excel" onClick={downloadPDF}>
           Download PDF
         </Button>
         <Button variant="excel" onClick={downloadExcel}>
           Download Excel
         </Button>
-        <Button variant="back" onClick={saveTimetable}>
+        <Button variant="excel" onClick={saveTimetable}>
           💾 Save Timetable
         </Button>
       </div>
