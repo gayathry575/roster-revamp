@@ -215,8 +215,13 @@ export const TimetableDisplay: React.FC<TimetableDisplayProps> = ({ inputs, onBa
               ))}
             </tr>
             <tr>
-              {SLOT_TIMINGS.map((time, index) => index !== 3 && (
+              {SLOT_TIMINGS.slice(0, 3).map((time, index) => (
                 <th key={index} className="bg-amrita-primary text-white p-2 border border-amrita-border text-sm">
+                  {time}
+                </th>
+              ))}
+              {SLOT_TIMINGS.slice(3).map((time, index) => (
+                <th key={index + 3} className="bg-amrita-primary text-white p-2 border border-amrita-border text-sm">
                   {time}
                 </th>
               ))}
